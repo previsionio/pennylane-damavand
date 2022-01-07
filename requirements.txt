@@ -1,0 +1,2 @@
+pennylane>=0.20.0
+damavand>=0.1.0
