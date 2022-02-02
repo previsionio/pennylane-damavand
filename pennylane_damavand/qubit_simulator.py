@@ -202,6 +202,10 @@ class DamavandQubitSimulator(QubitDevice):
         return self._convert_to_pennylane_convention(
                 [complex(r, i) for r, i in zip(real_part_state, imaginary_part_state)])
 
+    def get_fidelity_between_two_states_with_parameters(self, parameters_1, parameters_2):
+        return self._circuit.get_fidelity_between_two_states_with_parameters(
+                parameters_1, parameters_2)
+
     def reset(self):
         self._samples = None
         self._circuit.reset()
@@ -214,7 +218,9 @@ class DamavandQubitSimulator(QubitDevice):
         return np.squeeze(np.mean(self.sample(observable), axis=0))
 
     def analytic_probability(self, wires=None):
-        return self._convert_to_pennylane_convention(self._circuit.measure())
+        measure = self._circuit.measure()
+        probas = measure / np.sum(measure)
+        return self._convert_to_pennylane_convention(probas)
 
     def _convert_to_pennylane_convention(self, vector):
         """Reverse the qubit order for a vector of amplitudes.
